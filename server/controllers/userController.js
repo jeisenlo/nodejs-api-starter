@@ -83,7 +83,7 @@ userController.create = async (req, res, next) => {
     return next(boom.badRequest('Invalid or missing parameters', errors));
   }
 
-  const { email, role, firstName, middleName, lastName } = req.body;
+  const { email, role, firstName, middleName, lastName, photo } = req.body;
 
   try {
 
@@ -93,10 +93,7 @@ userController.create = async (req, res, next) => {
       email,
       role,
       settings: {
-        _school: req.user.settings._school._id,
-        _gradeLevel: gradeLevelId,
         timeZone: req.user.settings.timeZone,
-        learningStandardType: req.user.settings.learningStandardType,
       },
       profile: {
         firstName,
@@ -113,7 +110,7 @@ userController.create = async (req, res, next) => {
     // The new user must create a password when they first log in
     var fromEmail = new helper.Email(config.ap_support_email);
     var toEmail = new helper.Email(newUser.email);
-    var subject = `${req.user.profile.firstName} has invited you to Angular Pulse`;
+    var subject = `${req.user.profile.firstName} has invited you`;
     var content = new helper.Content('text/plain', `Hello ${newUser.profile.firstName},\n\n${req.user.profile.firstName} has sent you an invitation to Angular Pulse.\n`);
     var mail = new helper.Mail(fromEmail, subject, toEmail, content);
 
@@ -284,7 +281,7 @@ userController.getSettings = async (req, res, next) => {
     }).lean();
     // return only the settings object and user email
     user.settings.email = user.email;
-    
+
     res.status(200).json({
         data: user.settings,
     });

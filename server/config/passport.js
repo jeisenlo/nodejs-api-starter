@@ -16,13 +16,8 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
   }).populate({
     path: '_account',
     select: 'name',
-  }).populate({
-    path: 'settings._school',
-    select: 'school',
-  }).populate({
-    path: 'settings._gradeLevel',
-    select: 'gradeLevel',
   }).then( user => {
+
 //console.log('user in passport.js: ', user);
 
     if(!user) { 
@@ -93,12 +88,6 @@ const jwtLogin = new JWTStrategy(jwtOptions, function(payload, done) {
   User.findById( payload._id ).populate({
     path: '_account',
     select: 'name',
-  }).populate({
-    path: 'settings._school',
-    select: 'school',
-  }).populate({
-    path: 'settings._gradeLevel',
-    select: 'gradeLevel',
   }).then( user => {
     if (user) {
       done(null, user);
