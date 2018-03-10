@@ -25,9 +25,7 @@ mongoose.Promise = global.Promise;
   console.log('Connected to mongodb on port ' + config.port);
 });*/
 
-const dbPromise = mongoose.connect(config.database, {
-  useMongoClient: true,
-});
+const dbPromise = mongoose.connect(config.database);
 dbPromise.then( db => {
 	console.log('Connected to mongodb on port ' + config.port);
 });

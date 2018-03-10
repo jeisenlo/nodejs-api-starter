@@ -1,5 +1,6 @@
 import config from './../config/main';
 import db from './../models';
+import boom from 'boom';
 
 const accountController = {};
 
@@ -7,12 +8,6 @@ const accountController = {};
 accountController.getAll = async (req, res, next) => {
 	req.assert('skip').optional().isInt({ min: 0 });
 	req.assert('limit').optional().isInt({ min: 1, max: config.max_records });
-
-	const errors = req.validationErrors();
-
-	if (errors) {
-		next(errors);
-	}
 
 	/*
 	const errors = yield req.getValidationResult(); 
@@ -38,7 +33,7 @@ accountController.getAll = async (req, res, next) => {
 	} catch (err) {
 
 	    console.log('Error getting all Accounts: ', err);
-	    next(err);
+	    return next(boom.badImplementation(err));
 
 	}
 
@@ -59,7 +54,7 @@ accountController.getById = async (req, res, next) => {
 	} catch (err) {
 
     	console.log('Error getting Account by Id: ', err);
-    	next(err);
+    	return next(boom.badImplementation(err));
 
   	}
 

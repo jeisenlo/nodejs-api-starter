@@ -111,7 +111,7 @@ authController.login = async (req, res, next) => {
 	} catch (err) {
 
 		console.log('Error occurred for User logging in: ', err);
-		next(err);
+		return next(err);
 
 	}
 
@@ -127,7 +127,7 @@ authController.refreshToken = async (req, res, next) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		next(errors);
+		return next(errors);
 	}
 
 	const { email, refreshToken } = req.body;
@@ -171,7 +171,7 @@ authController.refreshToken = async (req, res, next) => {
 	} catch (err) {
 
 		console.log('Error occurred validating refresh token: ', err);
-		next(err);
+		return next(err);
 
 	}		
 
@@ -191,8 +191,7 @@ authController.registerStep1 = async (req, res, next) => {
   	const errors = req.validationErrors();
 
 	if (errors) {
-		// TODO: Remove Errors from the response and replace with text response
-		return res.status(401).json({ error: { msg: errors } });
+		return next(errors);
 	}
 
 	// Check for registration errors
@@ -248,7 +247,7 @@ authController.registerStep1 = async (req, res, next) => {
 		// Delete the account since the user was not created
   		db.Account.findOneAndRemove({_id: account._id}).exec();
 		console.log('Error occurred in Registration step 1: ', err);
-		next(err);
+		return next(err);
 
 	}
 
@@ -263,7 +262,7 @@ authController.forgotPassword = (req, res, next) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		next(errors);
+		return next(errors);
 	}
 
 	async.waterfall([
@@ -382,7 +381,7 @@ authController.forgotPassword = (req, res, next) => {
 		}
 	], err => {
 		res.status(401).json({ error: 'An error occurred while trying to process your forgot password request. Please try again.' });
-		if (err) { return next(err); }
+		return next(err);
 	});
 
 }
@@ -393,8 +392,7 @@ authController.validatePasswordResetToken = async (req, res, next) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		// TODO: Remove Errors from the response and replace with text response
-		return res.status(401).json({ error: { msg: errors } });
+		return next(errors);
   	}
 
   	// Get the verfication from the url or body depending on the sendMethod (email or text)
@@ -418,7 +416,7 @@ authController.validatePasswordResetToken = async (req, res, next) => {
     } catch (err) {
 
 		console.log('Error occurred validating password reset token: ', err);
-		next(err);
+		return next(err);
 
 	}
 
@@ -432,8 +430,7 @@ authController.resetPassword = (req, res, next) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		// TODO: Remove Errors from the response and replace with text response
-		return res.status(401).json({ error: { msg: errors } });
+		return next(errors);
 	}
 
 	const { code } = req.params;
@@ -505,7 +502,7 @@ authController.resetPassword = (req, res, next) => {
 		}
 	], err => {
 		res.status(401).json({ error: 'An error occurred while trying to reset your password. Please try again.' });
-		if (err) { return next(err); }
+		return next(err);
 	});
 
 }
